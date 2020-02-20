@@ -13,7 +13,24 @@ async function run() {
 
 	const client = new github.GitHub(token);
 
+	console.log({
+		token,
+		owner,
+		repo,
+		head_sha,
+		GITHUB_WORKSPACE,
+	})
+
 	// create a check
+	const data = await client.checks.create({
+		owner,
+		repo,
+		head_sha,
+		name: 'ESLint Check',
+	});
+
+	console.log(data);
+
 	const { data: { id: check_run_id } } = await client.checks.create({
 		owner,
 		repo,
