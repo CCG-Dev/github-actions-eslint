@@ -13,7 +13,7 @@ async function run() {
 
 	const client = new github.GitHub(token);
 
-	console.log({
+	core.debug({
 		token,
 		owner,
 		repo,
@@ -29,7 +29,7 @@ async function run() {
 		name: 'ESLint Check',
 	});
 
-	console.log(data);
+	core.debug(data);
 
 	const { data: { id: check_run_id } } = await client.checks.create({
 		owner,
