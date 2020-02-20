@@ -66,7 +66,7 @@ async function run() {
 			core.error(error);
 			core.setFailed(error.message);
 		}
-	} catch (err) {
+	} catch (error) {
 		core.error(error);
 		core.setFailed(error.message);
 	}
