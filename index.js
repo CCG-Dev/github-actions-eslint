@@ -32,7 +32,9 @@ async function run() {
 			name: 'ESLint Check',
 		});
 
-		core.debug(JSON.stringify(data, null, 2));
+		console.log(data);
+
+		// core.debug(JSON.stringify(data, null, 2));
 
 		const { data: { id: check_run_id } } = await client.checks.create({
 			owner,
