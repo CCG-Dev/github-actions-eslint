@@ -1,16 +1,15 @@
-# Hello world javascript action
-This action prints "Hello World" "Hello" + the name os a person to greet to the log.
+# ESlint Github Action
+
+This action executes ESlint check using the repo's eslint config and provides annotations.
 
 ## Inputs
-### `who-to-greet`
-**Required** The name of the person to greet. Default `"World"`.
 
-## Outputs
-### `time`
+### `repo-token`
 
-The time we greeted you.
+**Required** The GITHUB_TOKEN secret.
 
 ## Example usage
-uses: actions/github-actions-hello@v1
+
+uses: ccg-dev/github-actions-eslint@master
 with:
-	who-to-greet: 'Mona the Octocat'
+	repo-token: 'YOURTOKENHERE'

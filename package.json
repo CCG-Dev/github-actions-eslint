@@ -1,24 +1,24 @@
 {
-  "name": "github-actions-hello",
+  "name": "github-actions-eslint",
   "version": "1.0.0",
-  "description": "Testing Github Actions",
+  "description": "Runs ESLint and provides annotations",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/adeloyedeji/github-actions-hello.git"
+    "url": "git+https://github.com/ccg-dev/github-actions-eslint.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/adeloyedeji/github-actions-hello/issues"
+    "url": "https://github.com/ccg-dev/github-actions-eslint/issues"
   },
-  "homepage": "https://github.com/adeloyedeji/github-actions-hello#readme",
+  "homepage": "https://github.com/ccg-dev/github-actions-eslint#readme",
   "dependencies": {
-    "@actions/core": "^1.1.0",
-    "@actions/github": "^1.1.0"
+    "@actions/core": "^1.2.2",
+    "@actions/github": "^2.1.0"
   }
 }
