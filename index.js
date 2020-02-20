@@ -6,13 +6,14 @@ const {
 	GITHUB_REPOSITORY: repo,
 	GITHUB_SHA: head_sha,
 	GITHUB_WORKSPACE,
+	GITHUB_TOKEN,
 } = process.env;
 
 async function run() {
 	try {
 		const token = core.getInput('repo-token', { required: true });
 
-		const client = new github.GitHub(token);
+		const client = new github.GitHub(GITHUB_TOKEN);
 
 		core.debug(JSON.stringify({
 			token,
@@ -20,6 +21,7 @@ async function run() {
 			repo,
 			head_sha,
 			GITHUB_WORKSPACE,
+			GITHUB_TOKEN
 		}, null, 2));
 
 		// create a check
