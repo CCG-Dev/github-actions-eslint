@@ -13,16 +13,7 @@ async function run() {
 	try {
 		const token = core.getInput('repo-token', { required: true });
 
-		const client = new github.GitHub(GITHUB_TOKEN);
-
-		core.debug(JSON.stringify({
-			token,
-			owner,
-			repo,
-			head_sha,
-			GITHUB_WORKSPACE,
-			GITHUB_TOKEN
-		}, null, 2));
+		const client = new github.GitHub(token);
 
 		// create a check
 		const data = await client.checks.create({
@@ -32,16 +23,14 @@ async function run() {
 			name: 'ESLint Check',
 		});
 
-		console.log(data);
-
 		// core.debug(JSON.stringify(data, null, 2));
 
-		const { data: { id: check_run_id } } = await client.checks.create({
-			owner,
-			repo,
-			head_sha,
-			name: 'ESLint Check',
-		});
+		// const { data: { id: check_run_id } } = await client.checks.create({
+		// 	owner,
+		// 	repo,
+		// 	head_sha,
+		// 	name: 'ESLint Check',
+		// });
 
 		try {
 			// run eslint
@@ -71,7 +60,7 @@ async function run() {
 			core.setFailed(error.message);
 		}
 	} catch (error) {
-		core.error(error);
+		core.error(error.message);
 		core.setFailed(error.message);
 	}
 }
