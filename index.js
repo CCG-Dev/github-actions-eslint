@@ -9,59 +9,64 @@ const {
 } = process.env;
 
 async function run() {
-	const token = core.getInput('repo-token', { required: true });
-
-	const client = new github.GitHub(token);
-
-	core.debug({
-		token,
-		owner,
-		repo,
-		head_sha,
-		GITHUB_WORKSPACE,
-	})
-
-	// create a check
-	const data = await client.checks.create({
-		owner,
-		repo,
-		head_sha,
-		name: 'ESLint Check',
-	});
-
-	core.debug(data);
-
-	const { data: { id: check_run_id } } = await client.checks.create({
-		owner,
-		repo,
-		head_sha,
-		name: 'ESLint Check',
-	});
-
 	try {
-		// run eslint
-		const { conclusion, output } = eslint();
-		console.log(output.summary);
+		const token = core.getInput('repo-token', { required: true });
 
-		// update check
-		await client.checks.update({
+		const client = new github.GitHub(token);
+
+		core.debug(JSON.stringify({
+			token,
 			owner,
 			repo,
-			check_run_id,
-			conclusion,
-			output,
+			head_sha,
+			GITHUB_WORKSPACE,
+		}, null, 2));
+
+		// create a check
+		const data = await client.checks.create({
+			owner,
+			repo,
+			head_sha,
+			name: 'ESLint Check',
 		});
 
-		if (conclusion === 'failure') {
-			process.exit(78);
+		core.debug(JSON.stringify(data, null, 2));
+
+		const { data: { id: check_run_id } } = await client.checks.create({
+			owner,
+			repo,
+			head_sha,
+			name: 'ESLint Check',
+		});
+
+		try {
+			// run eslint
+			const { conclusion, output } = eslint();
+			console.log(output.summary);
+
+			// update check
+			await client.checks.update({
+				owner,
+				repo,
+				check_run_id,
+				conclusion,
+				output,
+			});
+
+			if (conclusion === 'failure') {
+				process.exit(78);
+			}
+		} catch (error) {
+			await client.checks.update({
+				owner,
+				repo,
+				check_run_id,
+				conclusion: 'failure',
+			});
+			core.error(error);
+			core.setFailed(error.message);
 		}
-	} catch (error) {
-		await client.checks.update({
-			owner,
-			repo,
-			check_run_id,
-			conclusion: 'failure',
-		});
+	} catch (err) {
 		core.error(error);
 		core.setFailed(error.message);
 	}
