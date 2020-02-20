@@ -14,7 +14,7 @@ async function run() {
 	const client = new github.GitHub(token);
 
 	// create a check
-	const { id: check_run_id } = await client.checks.create({
+	const { data: { id: check_run_id } } = await client.checks.create({
 		owner,
 		repo,
 		head_sha,
