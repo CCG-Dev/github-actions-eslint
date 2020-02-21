@@ -5,7 +5,7 @@ const path = require('path');
 
 const {
 	GITHUB_REPOSITORY,
-	GITHUB_SHA: head_sha,
+	GITHUB_SHA: headSha,
 	GITHUB_WORKSPACE,
 } = process.env;
 
@@ -13,16 +13,16 @@ const [owner, repo] = GITHUB_REPOSITORY.split('/');
 
 const checkName = 'ESLint check';
 
-async function run() {
+const run = async () => {
 	const token = core.getInput('repo-token', { required: true });
 
 	const client = new github.GitHub(token);
 
 	// create a check
-	const { data: { id: check_run_id } } = await client.checks.create({
+	const { data: { id } } = await client.checks.create({
 		owner,
 		repo,
-		head_sha,
+		head_sha: headSha,
 		name: checkName,
 	});
 
@@ -33,11 +33,11 @@ async function run() {
 
 		// update check
 		await client.checks.update({
-			owner,
-			repo,
-			check_run_id,
 			conclusion,
 			output,
+			owner,
+			repo,
+			check_run_id: id,
 		});
 
 		if (conclusion === 'failure') {
@@ -47,7 +47,7 @@ async function run() {
 		await client.checks.update({
 			owner,
 			repo,
-			check_run_id,
+			check_run_id: id,
 			conclusion: 'failure',
 		});
 		console.error(error);
@@ -55,7 +55,7 @@ async function run() {
 	}
 }
 
-function eslint() {
+const eslint = () => {
 	let cwd = core.getInput('working-directory');
 
 	if (cwd && !path.isAbsolute(cwd)) {
@@ -66,13 +66,14 @@ function eslint() {
 
 	core.debug(`Starting lint engine with cwd: ${cwd}`);
 
-	const cli = new CLIEngine({
+	const linter = new CLIEngine({
 		extensions: ['.js'],
 		ignorePath: '.gitignore',
+		useEslintrc: false,
 		cwd,
 	});
 
-	const report = cli.executeOnFiles(['.']);
+	const report = linter.executeOnFiles(['.']);
 
 	// fixableErrorCount, fixableWarningCount are available too
 	const { results, errorCount, warningCount } = report;
@@ -106,7 +107,7 @@ function eslint() {
 	};
 }
 
-function setFailed(error) {
+const setFailed = (error) => {
 	core.error(error.message);
 	core.setFailed(error.message);
 }
