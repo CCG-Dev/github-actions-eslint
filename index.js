@@ -56,14 +56,14 @@ async function run() {
 
 function eslint() {
 	const cli = new CLIEngine({
-		baseConfig: {
-			plugins: ["google", "prettier"],
-			extends: ["eslint:recommended", "google", "prettier"],
-		},
 		extensions: ['.js'],
 		ignorePath: '.gitignore',
 		parser: 'babel-eslint',
 	});
+
+	cli.addPlugin("eslint:recommended");
+	cli.addPlugin("google");
+	cli.addPlugin("prettier");
 
 	const report = cli.executeOnFiles(['.']);
 
