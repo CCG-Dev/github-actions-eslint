@@ -7,11 +7,10 @@ const {
 	GITHUB_WORKSPACE,
 } = process.env;
 
-const [owner, repo] = GITHUB_REPOSITORY.split('/');
-
 async function run() {
 	try {
 		const token = core.getInput('repo-token', { required: true });
+		const [owner, repo] = GITHUB_REPOSITORY.split('/');
 
 		const client = new github.GitHub(token);
 
