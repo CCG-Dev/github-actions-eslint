@@ -3,7 +3,7 @@ const github = require('@actions/github');
 
 const {
 	GITHUB_ACTOR,
-	GITHUB_REPOSITORY: repo,
+	GITHUB_REPOSITORY,
 	GITHUB_SHA: head_sha,
 	GITHUB_WORKSPACE,
 	GITHUB_TOKEN,
