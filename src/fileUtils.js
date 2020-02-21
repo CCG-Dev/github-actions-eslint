@@ -6,7 +6,7 @@ const micromatch = require('micromatch');
 
 const { fetchFilesBatchPR, fetchFilesBatchCommit } = require('./api');
 
-export const filterFiles = (files, globs) => {
+const filterFiles = (files, globs) => {
 	const result = [];
 	const filtered = micromatch(files, globs);
 
@@ -41,7 +41,7 @@ const getFilesFromPR = async (client, prNumber) => {
 	return files;
 }
 
-export const getChangedFiles = async (
+const getChangedFiles = async (
 	client,
 	filesGlob,
 	prNumber,
@@ -57,3 +57,8 @@ export const getChangedFiles = async (
 
 	return filterFiles(files, filesGlob);
 }
+
+module.exports = {
+	filterFiles,
+	getChangedFiles,
+};

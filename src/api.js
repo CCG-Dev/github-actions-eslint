@@ -4,7 +4,7 @@ const github = require('@actions/github');
 const OWNER = github.context.repo.owner;
 const REPO = github.context.repo.repo;
 
-export const fetchFilesBatchPR = async (
+const fetchFilesBatchPR = async (
 	client,
 	prNumber,
 	startCursor,
@@ -51,7 +51,7 @@ export const fetchFilesBatchPR = async (
 	};
 }
 
-export const fetchFilesBatchCommit = async (
+const fetchFilesBatchCommit = async (
 	client,
 	sha,
 	owner = OWNER,
@@ -74,3 +74,8 @@ export const fetchFilesBatchCommit = async (
 		return [];
 	}
 }
+
+module.exports = {
+	fetchFilesBatchPR,
+	fetchFilesBatchCommit,
+};
