@@ -4,7 +4,7 @@ const path = require('path');
 const core = require('@actions/core');
 const micromatch = require('micromatch');
 
-import { fetchFilesBatchPR, fetchFilesBatchCommit } from './api';
+const { fetchFilesBatchPR, fetchFilesBatchCommit } = require('./api');
 
 export const filterFiles = (files, globs) => {
 	const result = [];
