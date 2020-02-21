@@ -57,6 +57,7 @@ async function run() {
 function eslint() {
 	const cli = new CLIEngine({
 		baseConfig: {
+			plugins: ["google", "prettier"],
 			extends: ["eslint:recommended", "google", "prettier"],
 		},
 		extensions: ['.js'],
