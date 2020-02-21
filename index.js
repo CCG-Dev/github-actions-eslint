@@ -61,7 +61,7 @@ function eslint() {
 		},
 		extensions: ['.js'],
 		ignorePath: '.gitignore',
-		parser: 'eslint-loader',
+		parser: 'babel-eslint',
 	});
 
 	const report = cli.executeOnFiles(['.']);
