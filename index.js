@@ -12,49 +12,44 @@ const [owner, repo] = GITHUB_REPOSITORY.split('/');
 const checkName = 'ESLint check';
 
 async function run() {
+	const token = core.getInput('repo-token', { required: true });
+
+	const client = new github.GitHub(token);
+
+	// create a check
+	const { data: { id: check_run_id } } = await client.checks.create({
+		owner,
+		repo,
+		head_sha,
+		name: checkName,
+	});
+
 	try {
-		const token = core.getInput('repo-token', { required: true });
+		// run eslint
+		const { conclusion, output } = eslint();
+		console.log(output.summary);
 
-		const client = new github.GitHub(token);
-
-		// create a check
-		const { data: { id: check_run_id } } = await client.checks.create({
+		// update check
+		await client.checks.update({
 			owner,
 			repo,
-			head_sha,
-			name: checkName,
+			check_run_id,
+			conclusion,
+			output,
 		});
 
-		try {
-			// run eslint
-			const { conclusion, output } = eslint();
-			console.log(output.summary);
-
-			// update check
-			await client.checks.update({
-				owner,
-				repo,
-				check_run_id,
-				conclusion,
-				output,
-			});
-
-			if (conclusion === 'failure') {
-				process.exit(78);
-			}
-		} catch (error) {
-			await client.checks.update({
-				owner,
-				repo,
-				check_run_id,
-				conclusion: 'failure',
-			});
-			core.error(error);
-			core.setFailed(error.message);
+		if (conclusion === 'failure') {
+			process.exit(78);
 		}
 	} catch (error) {
-		core.error(error);
-		core.setFailed(error.message);
+		await client.checks.update({
+			owner,
+			repo,
+			check_run_id,
+			conclusion: 'failure',
+		});
+		console.error(error);
+		setFailed(error);
 	}
 }
 
@@ -100,4 +95,9 @@ function eslint() {
 	};
 }
 
-run();
+function setFailed(error) {
+	core.error(error.message);
+	core.setFailed(error.message);
+}
+
+run().catch(err => setFailed(err));
