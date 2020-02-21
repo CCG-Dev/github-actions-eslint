@@ -2,11 +2,9 @@ const core = require('@actions/core');
 const github = require('@actions/github');
 
 const {
-	GITHUB_ACTOR,
 	GITHUB_REPOSITORY,
 	GITHUB_SHA: head_sha,
 	GITHUB_WORKSPACE,
-	GITHUB_TOKEN,
 } = process.env;
 
 const [owner, repo] = GITHUB_REPOSITORY.split('/');
@@ -17,27 +15,13 @@ async function run() {
 
 		const client = new github.GitHub(token);
 
-		console.log(owner);
-		console.log(repo);
-
 		// create a check
-		const data = await client.checks.create({
+		const { data: { id: check_run_id } } = await client.checks.create({
 			owner,
 			repo,
 			head_sha,
 			name: 'ESLint Check',
 		});
-
-		console.log(JSON.stringify(data, null, 2));
-
-		// core.debug(JSON.stringify(data, null, 2));
-
-		// const { data: { id: check_run_id } } = await client.checks.create({
-		// 	owner,
-		// 	repo,
-		// 	head_sha,
-		// 	name: 'ESLint Check',
-		// });
 
 		try {
 			// run eslint
