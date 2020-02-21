@@ -32,7 +32,7 @@ const run = async () => {
 		console.log(output.summary);
 
 		// update check
-		await client.checks.update({
+		await batchChecksUpdate(client, {
 			conclusion,
 			output,
 			owner,
@@ -67,7 +67,7 @@ const eslint = () => {
 	core.debug(`Starting lint engine with cwd: ${cwd}`);
 
 	const linter = new CLIEngine({
-		extensions: ['.js'],
+		extensions: ['.js', '.jsx'],
 		ignorePath: '.gitignore',
 		useEslintrc: false,
 		cwd,
@@ -106,6 +106,32 @@ const eslint = () => {
 		}
 	};
 }
+
+const batchChecksUpdate = async (client, params) => {
+	if (params.output.annotations.length > 50) {
+		const batches = chunk(params.output.annotations);
+
+		batches.map((batch) => {
+			return client.checks.update({
+				...params,
+				output: {
+					...params.output,
+					annotations: batch,
+				},
+			});
+		});
+
+		return Promise.all(batches);
+	} else {
+		return client.checks.update(params);
+	}
+}
+
+const chunk = (arr, size) =>
+	Array.from({ length: Math.ceil(arr.length / size) }, (v, i) =>
+		arr.slice(i * size, i * size + size),
+	);
+
 
 const setFailed = (error) => {
 	core.error(error.message);
