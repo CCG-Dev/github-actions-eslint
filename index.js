@@ -1,6 +1,7 @@
 const core = require('@actions/core');
 const github = require('@actions/github');
 const CLIEngine = require('eslint').CLIEngine;
+const path = require('path');
 
 const {
 	GITHUB_REPOSITORY,
@@ -55,11 +56,18 @@ async function run() {
 }
 
 function eslint() {
+	let cwd = core.getInput('working-directory');
+
+	if (cwd && !path.isAbsolute(cwd)) {
+		cwd = path.resolve(cwd);
+	} else if (!cwd) {
+		cwd = process.cwd();
+	}
+
 	const cli = new CLIEngine({
-		extends: ["eslint:recommended", "google", "prettier"],
 		extensions: ['.js'],
 		ignorePath: '.gitignore',
-		parser: 'babel-eslint',
+		cwd,
 	});
 
 	const report = cli.executeOnFiles(['.']);
@@ -72,12 +80,12 @@ function eslint() {
 	const annotations = [];
 	for (const result of results) {
 		const { filePath, messages } = result;
-		const path = filePath.substring(GITHUB_WORKSPACE.length + 1);
+		const resultPath = filePath.substring(GITHUB_WORKSPACE.length + 1);
 		for (const msg of messages) {
 			const { line, severity, ruleId, message } = msg;
 			const annotationLevel = levels[severity];
 			annotations.push({
-				path,
+				path: resultPath,
 				start_line: line,
 				end_line: line,
 				annotation_level: annotationLevel,
