@@ -1,6 +1,6 @@
 const core = require('@actions/core');
 const github = require('@actions/github');
-const eslint = require('eslint');
+const CLIEngine = require('eslint').CLIEngine;
 
 const {
 	GITHUB_REPOSITORY,
@@ -27,7 +27,7 @@ async function run() {
 
 	try {
 		// run eslint
-		const { conclusion, output } = checkCode();
+		const { conclusion, output } = eslint();
 		console.log(output.summary);
 
 		// update check
@@ -54,8 +54,8 @@ async function run() {
 	}
 }
 
-function checkCode() {
-	const cli = new eslint.CLIEngine({
+function eslint() {
+	const cli = new CLIEngine({
 		extensions: ['.js'],
 		ignorePath: '.gitignore'
 	});
