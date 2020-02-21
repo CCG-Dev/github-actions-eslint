@@ -4,7 +4,6 @@ inputs:
     repo-token:
         description: 'The GITHUB_TOKEN secret'
         required: true
-        default: ${{ secrets:GITHUB_TOKEN }}
 runs:
     using: 'node12'
     main: 'index.js'
