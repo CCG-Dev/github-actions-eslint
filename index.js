@@ -56,8 +56,12 @@ async function run() {
 
 function eslint() {
 	const cli = new CLIEngine({
+		baseConfig: {
+			extends: ["eslint:recommended", "google", "prettier"],
+		},
 		extensions: ['.js'],
-		ignorePath: '.gitignore'
+		ignorePath: '.gitignore',
+		parser: 'eslint-loader',
 	});
 
 	const report = cli.executeOnFiles(['.']);
