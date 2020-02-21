@@ -9,7 +9,7 @@ const {
 	GITHUB_TOKEN,
 } = process.env;
 
-const owner = GITHUB_ACTOR.split('/')[0];
+const [owner, repo] = GITHUB_REPOSITORY.split('/');
 
 async function run() {
 	try {
@@ -18,6 +18,7 @@ async function run() {
 		const client = new github.GitHub(token);
 
 		console.log(owner);
+		console.log(repo);
 
 		// create a check
 		const data = await client.checks.create({
@@ -26,6 +27,8 @@ async function run() {
 			head_sha,
 			name: 'ESLint Check',
 		});
+
+		console.log(JSON.stringify(data, null, 2));
 
 		// core.debug(JSON.stringify(data, null, 2));
 
