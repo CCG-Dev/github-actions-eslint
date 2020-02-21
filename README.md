@@ -10,6 +10,17 @@ This action executes ESlint check using the repo's eslint config and provides an
 
 ## Example usage
 
-uses: ccg-dev/github-actions-eslint@master
-with:
-	repo-token: 'YOURTOKENHERE'
+```
+name: ESLint
+
+on: pull_request
+
+jobs:
+  eslint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - uses: ccg-dev/github-actions-eslint@master
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+```
