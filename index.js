@@ -64,6 +64,8 @@ function eslint() {
 		cwd = process.cwd();
 	}
 
+	core.debug(`Starting lint engine with cwd: ${cwd}`);
+
 	const cli = new CLIEngine({
 		extensions: ['.js'],
 		ignorePath: '.gitignore',
