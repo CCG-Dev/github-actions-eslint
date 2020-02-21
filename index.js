@@ -9,6 +9,8 @@ const {
 
 const [owner, repo] = GITHUB_REPOSITORY.split('/');
 
+const checkName = 'ESLint check';
+
 async function run() {
 	try {
 		const token = core.getInput('repo-token', { required: true });
@@ -20,7 +22,7 @@ async function run() {
 			owner,
 			repo,
 			head_sha,
-			name: 'ESLint Check',
+			name: checkName,
 		});
 
 		try {
@@ -60,7 +62,7 @@ function eslint() {
 	const eslint = require('eslint');
 
 	const cli = new eslint.CLIEngine({
-		extensions: ['.js', '.jsx', '.tsx'],
+		extensions: ['.js'],
 		ignorePath: '.gitignore'
 	});
 
