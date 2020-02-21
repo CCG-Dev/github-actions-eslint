@@ -2,18 +2,22 @@ const core = require('@actions/core');
 const github = require('@actions/github');
 
 const {
-	GITHUB_ACTOR: owner,
+	GITHUB_ACTOR,
 	GITHUB_REPOSITORY: repo,
 	GITHUB_SHA: head_sha,
 	GITHUB_WORKSPACE,
 	GITHUB_TOKEN,
 } = process.env;
 
+const owner = GITHUB_ACTOR.split('/')[0];
+
 async function run() {
 	try {
 		const token = core.getInput('repo-token', { required: true });
 
 		const client = new github.GitHub(token);
+
+		console.log(owner);
 
 		// create a check
 		const data = await client.checks.create({
