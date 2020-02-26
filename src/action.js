@@ -53,6 +53,7 @@ const lint = (files) => {
 	const linter = new eslint.CLIEngine({
 		extensions,
 		ignorePattern: ignoreGlob,
+		useEslintrc: false,
 		cwd,
 	});
 
